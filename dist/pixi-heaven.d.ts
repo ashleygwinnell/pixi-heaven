@@ -221,6 +221,8 @@ declare module PIXI.heaven.mesh {
         pluginName: string;
         _uvTransform: PIXI.TextureMatrix;
         vertexData: Float32Array;
+        maskVertexData: Float32Array;
+        maskSprite: PIXI.Sprite;
         constructor(texture?: PIXI.Texture, vertices?: Float32Array, uvs?: Float32Array, indices?: Uint16Array, drawMode?: number);
         updateTransform(): void;
         _renderWebGL(renderer: PIXI.WebGLRenderer): void;
@@ -232,6 +234,7 @@ declare module PIXI.heaven.mesh {
         _calculateBounds(): void;
         containsPoint(point: PIXI.PointLike): boolean;
         calculateVertices(): void;
+        calculateMaskVertices(): void;
         texture: PIXI.Texture;
         enableColors(): void;
         setRGB(rgb: Float32Array, dark: boolean): void;
@@ -352,6 +355,14 @@ declare module PIXI.heaven.mesh {
         shaderTrim: PIXI.Shader;
         onContextChange(): void;
         render(mesh: Mesh): void;
+    }
+}
+declare module PIXI.heaven {
+    class TexturePolygon {
+        vertices: ArrayLike<number>;
+        uvs: ArrayLike<number>;
+        indices: ArrayLike<number>;
+        constructor(vertices: ArrayLike<number>, uvs: ArrayLike<number>, indices: ArrayLike<number>);
     }
 }
 declare module PIXI.heaven {
@@ -483,11 +494,15 @@ declare module PIXI.heaven {
         color: ColorTransform;
         maskSprite: PIXI.Sprite;
         maskVertexData: Float32Array;
+        uvs: Float32Array;
+        indices: Uint16Array;
         constructor(texture: PIXI.Texture);
         _tintRGB: number;
         tint: number;
         updateTransform(): void;
         _onTextureUpdate(): void;
+        _calculateBounds(): void;
+        calculateVertices(): void;
         calculateMaskVertices(): void;
     }
 }
@@ -514,6 +529,12 @@ declare module PIXI.heaven.spine {
         constructor(spineData: PIXI.spine.core.SkeletonData);
         newSprite(tex: PIXI.Texture): any;
         newMesh(texture: PIXI.Texture, vertices?: Float32Array, uvs?: Float32Array, indices?: Uint16Array, drawMode?: number): any;
+    }
+    class SpineMesh extends mesh.Mesh {
+        region: PIXI.spine.core.TextureRegion;
+        spine: Spine;
+        constructor(texture: PIXI.Texture, vertices?: Float32Array, uvs?: Float32Array, indices?: Uint16Array, drawMode?: number, spine?: Spine);
+        _renderWebGL(renderer: PIXI.WebGLRenderer): void;
     }
     class SpineSprite extends Sprite {
         region: PIXI.spine.core.TextureRegion;

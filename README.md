@@ -7,10 +7,8 @@ This is heaven for sprites. Want to color them better? Wanna use advanced colors
 Done:
 
 * Advanced color modes
-
-TO-DO:
-
 * Polygon packing
+* Mesh batching
 
 ### Be careful!
 
@@ -101,7 +99,7 @@ spine.color.setDark(0.2, 0.2, 0.2);
 
 ### How to mask sprites with sprites
 
-Plugin adds special renderer that has faster masks than just `sprite.mask`
+Plugin adds special renderer that has faster masks than just `sprite.mask`. It also works on heaven meshes.
 
 ```js
 sprite = new PIXI.heaven.Sprite();
