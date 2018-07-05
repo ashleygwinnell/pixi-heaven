@@ -93,7 +93,7 @@ module pixi_heaven {
 					glTexture = renderTarget.texture;
 				}
 				else {
-					glTexture = new PIXI.glCore.GLTexture(this.gl, null, null, null, null);
+					glTexture = new PIXI.glCore.GLTexture(this.gl, null, null, texture.glFormat, texture.glType);
 					glTexture.bind(location);
 				}
 				texture._glTextures[this.renderer.CONTEXT_UID] = glTexture;

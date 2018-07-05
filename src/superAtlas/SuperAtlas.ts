@@ -214,7 +214,7 @@ namespace pixi_heaven {
 
 		onTextureUpload(renderer: PIXI.WebGLRenderer, baseTexture: PIXI.BaseTexture, tex: PIXI.glCore.GLTexture): boolean {
 			tex.bind();
-			const imgTexture = this.baseTexture;
+			const imgTexture:any = this.baseTexture;
 			const gl = tex.gl;
 			const levels = this.options.mipLevels;
 
@@ -227,12 +227,12 @@ namespace pixi_heaven {
 				gl.texImage2D(
 					gl.TEXTURE_2D, //GLenum target
 					0, //GLint level
-					gl.RGBA, //GLint internalformat
+					imgTexture.glFormat || gl.RGBA, //GLint internalformat
 					imgTexture.width, //GLsizei width
 					imgTexture.height, //GLsizei height
 					0, //GLint border // should be 0, it is borderColor
-					gl.RGBA, //GLenum format
-					gl.UNSIGNED_BYTE,//GLenum type
+					imgTexture.glFormat || gl.RGBA, //GLenum format
+					imgTexture.glType || gl.UNSIGNED_BYTE,//GLenum type
 					null //ArrayBufferView? pixels
 				);
 
@@ -242,12 +242,12 @@ namespace pixi_heaven {
 						gl.texImage2D(
 							gl.TEXTURE_2D, //GLenum target
 							lvl, //GLint level
-							gl.RGBA, //GLint internalformat
+							imgTexture.glFormat || gl.RGBA, //GLint internalformat
 							imgTexture.width >> lvl, //GLsizei width
 							imgTexture.height >> lvl, //GLsizei height
 							0, //GLint border // should be 0, it is borderColor
-							gl.RGBA, //GLenum format
-							gl.UNSIGNED_BYTE,//GLenum type
+							imgTexture.glFormat || gl.RGBA, //GLenum format
+							imgTexture.glType || gl.UNSIGNED_BYTE,//GLenum type
 							null //ArrayBufferView? pixels
 						);
 					}
@@ -256,8 +256,8 @@ namespace pixi_heaven {
 
 			for (let key in this.tree.hash) {
 				let node = this.tree.hash[key];
-				let entry = node.data;
-				let entryTex = entry.baseTexture;
+				let entry:any = node.data;
+				let entryTex:any = entry.baseTexture;
 				// if (!obj.isLoaded) continue;
 				if (!uploadAll && tex._updateID >= entry.nodeUpdateID) continue;
 
@@ -267,8 +267,8 @@ namespace pixi_heaven {
 					0, //GLint level
 					rect.left, // GLint xoffset
 					rect.top, // GLint yoffset
-					gl.RGBA, //GLenum format
-					gl.UNSIGNED_BYTE,//GLenum type
+					entry.baseTexture.glFormat || gl.RGBA, //GLenum format
+					entry.baseTexture.glType || gl.UNSIGNED_BYTE,//GLenum type
 					entry.baseTexture.source // TexImageSource source
 				);
 
@@ -286,8 +286,8 @@ namespace pixi_heaven {
 							rect.top >> lvl, // GLint yoffset
 							mip.width,
 							mip.height,
-							gl.RGBA, //GLenum format
-							gl.UNSIGNED_BYTE,//GLenum type
+							entryTex.glFormat || gl.RGBA, //GLenum format
+							entryTex.glType || gl.UNSIGNED_BYTE,//GLenum type
 							mip.data
 						);
 					}

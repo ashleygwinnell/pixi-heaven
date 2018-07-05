@@ -619,7 +619,7 @@ var pixi_heaven;
                         glTexture = renderTarget.texture;
                     }
                     else {
-                        glTexture = new PIXI.glCore.GLTexture(_this.gl, null, null, null, null);
+                        glTexture = new PIXI.glCore.GLTexture(_this.gl, null, null, texture.glFormat, texture.glType);
                         glTexture.bind(location);
                     }
                     texture._glTextures[_this.renderer.CONTEXT_UID] = glTexture;
@@ -2068,10 +2068,10 @@ var pixi_heaven;
             gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, imgTexture.premultipliedAlpha);
             var uploadAll = tex._updateID < this.imageTextureRebuildUpdateID;
             if (uploadAll) {
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, imgTexture.width, imgTexture.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+                gl.texImage2D(gl.TEXTURE_2D, 0, imgTexture.glFormat || gl.RGBA, imgTexture.width, imgTexture.height, 0, imgTexture.glFormat || gl.RGBA, imgTexture.glType || gl.UNSIGNED_BYTE, null);
                 if (tex.mipmap) {
                     for (var lvl = 1; (imgTexture.width >> lvl) > 0; lvl++) {
-                        gl.texImage2D(gl.TEXTURE_2D, lvl, gl.RGBA, imgTexture.width >> lvl, imgTexture.height >> lvl, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+                        gl.texImage2D(gl.TEXTURE_2D, lvl, imgTexture.glFormat || gl.RGBA, imgTexture.width >> lvl, imgTexture.height >> lvl, 0, imgTexture.glFormat || gl.RGBA, imgTexture.glType || gl.UNSIGNED_BYTE, null);
                     }
                 }
             }
@@ -2082,7 +2082,7 @@ var pixi_heaven;
                 if (!uploadAll && tex._updateID >= entry.nodeUpdateID)
                     continue;
                 var rect = node.rect;
-                gl.texSubImage2D(gl.TEXTURE_2D, 0, rect.left, rect.top, gl.RGBA, gl.UNSIGNED_BYTE, entry.baseTexture.source);
+                gl.texSubImage2D(gl.TEXTURE_2D, 0, rect.left, rect.top, entry.baseTexture.glFormat || gl.RGBA, entry.baseTexture.glType || gl.UNSIGNED_BYTE, entry.baseTexture.source);
                 if (levels > 0) {
                     if (!entryTex._mips || entryTex._mips.length < levels) {
                         entryTex.generateMips(levels);
@@ -2090,7 +2090,7 @@ var pixi_heaven;
                     var mips = entryTex._mips;
                     for (var lvl = 1; lvl <= levels; lvl++) {
                         var mip = mips[lvl - 1];
-                        gl.texSubImage2D(gl.TEXTURE_2D, lvl, rect.left >> lvl, rect.top >> lvl, mip.width, mip.height, gl.RGBA, gl.UNSIGNED_BYTE, mip.data);
+                        gl.texSubImage2D(gl.TEXTURE_2D, lvl, rect.left >> lvl, rect.top >> lvl, mip.width, mip.height, entryTex.glFormat || gl.RGBA, entryTex.glType || gl.UNSIGNED_BYTE, mip.data);
                     }
                 }
             }
